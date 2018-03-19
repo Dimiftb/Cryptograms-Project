@@ -32,10 +32,20 @@ public class Player
 		}
 		public void updateAccuracy(float lastRecAccuracy)
 		{
+			if(nrOfPlayedCryptograms == 1)
+			{
+				playerAccuracy = lastRecAccuracy;
+				return;
+			}
 			playerAccuracy = (playerAccuracy + lastRecAccuracy) / nrOfPlayedCryptograms;
 		}
 		public void updateAvgTime(float lastRecTime)
 		{
+			if(nrOfCompletedCryptograms == 1)
+			{
+				avgCompletionTime = lastRecTime;
+				return;
+			}
 			avgCompletionTime = (avgCompletionTime + lastRecTime) / nrOfCompletedCryptograms;
 		}
 		public  void incrementPlayedCryptos()
@@ -45,5 +55,21 @@ public class Player
 		public void incrementCompletedCryptos()
 		{
 			nrOfCompletedCryptograms++;
+		}
+		public float getPlayerAccuracy()
+		{
+			return playerAccuracy;
+		}
+		public float getAvgCompletionTime()
+		{
+			return avgCompletionTime;
+		}
+		public int getNrOfPlayedCryptograms()
+		{
+			return nrOfPlayedCryptograms;
+		}
+		public int getNrOfCompletedCryptograms()
+		{
+			return nrOfCompletedCryptograms;
 		}
 }

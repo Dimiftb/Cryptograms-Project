@@ -1,19 +1,28 @@
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Players
 {
 	private ArrayList<Player> players;
-
+	private int playersCount;
+	
+	
 	
 	public Players()
 	{
 		players = new ArrayList<Player>();
-
+		playersCount = 0;
+		
+		
 	}
 	public void addPlayer(Player newPlayer)
 	{
 		players.add(newPlayer);
+		playersCount++;
+		
 	}
 	public void removePlayer(String name)
 	{
@@ -25,7 +34,7 @@ public class Players
 			}
 		}
 	}
-	public Player findPlayer(String name) throws IOException
+	public Player findPlayer(String name)
 	{
 		for(Player player : players)
 		{
@@ -36,8 +45,8 @@ public class Players
 		}
 		throw new IndexOutOfBoundsException();
 	}
-	public void savePlayers()
+	public int getPlayerCount()
 	{
-		
+		return  playersCount;
 	}
 }
