@@ -42,14 +42,14 @@ public class PlayersTest
 	@Test
 	public void findPlayerTest()
 	{
-		assertEquals(game.getPlayerCount(), 14);
+		assertEquals(game.getPlayerCount(), 13);
 		assertEquals(game.findPlayer("4").getName(), "4");
 	}
 	@Test
 	public void removePlayerTest()
 	{
 		game.removePlayer("1");
-		assertEquals(game.getPlayerCount(), 13);
+		assertEquals(game.getPlayerCount(), 12);
 	}
 
 }
