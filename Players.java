@@ -111,7 +111,7 @@ public class Players
 				return player;
 			}
 		}
-		throw new IndexOutOfBoundsException();
+		return null;
 	}
 	public int getPlayerCount()
 	{

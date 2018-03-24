@@ -1,6 +1,13 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 public class Game {
 
 	private HashMap<Player, Cryptogram> playerGameMapping;
@@ -18,12 +25,13 @@ public class Game {
 		currentPlayerName = null;
 		currentLetter = null;
 		allPlayers = new Players();
+		currentCryptogram = new LetterCryptogram();
 	}
 
 
 	public void loadPlayer() {
 		String option;
-		String name;
+		String name = "";
 		System.out.println("Type 1 to create a new account  ");
 		System.out.println("Type 2 to load to an existing one  ");
 		option = reader.next().toLowerCase();
@@ -42,7 +50,7 @@ public class Game {
 		else {
 			System.out.println("Invalid option. Please try again.");
 		}
-		currentPlayerName = reader.next();
+		currentPlayerName = name;
 		System.out.println("Hi " + currentPlayerName);
 
 
@@ -116,18 +124,73 @@ public class Game {
 		System.out.println("Would you like to save your progress?");
 		option = reader.next();
 		if(option.toLowerCase().equals("yes")){
-			//save current state
+			try
+			{
+				FileWriter fw = new FileWriter("savedGames.txt", true);
+				BufferedWriter bw = new BufferedWriter(fw);
+			    PrintWriter out = new PrintWriter(bw);
+			    out.print(currentPlayer.getName());
+			    out.print(" ");
+			    out.print(((LetterCryptogram)currentCryptogram).getEncryptedPhrase());
+			    out.print(" ");
+			    out.println(((LetterCryptogram)currentCryptogram).getLetterMapping());
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 		else {
-			//do nothing
+			return;
 		}
 
 
 	}
 	public void loadGame() {
-		if (true/*file not exists*/) {
-			System.out.println("No saved game was found. Please save a game before loading :)");
+		String option;
+		System.out.println("Would you like to load a game(if you have any saved?");
+		option = reader.next().toLowerCase();
+		if(option == "yes")
+		{
+			try
+			{
+				File file = new File("savedGames.txt");
+				Scanner fileReader = new Scanner(file);
+				String tempName;
+				String tempPhrase;
+				boolean flag = false;
+				HashMap<Integer, Character> tempMapping = new HashMap<>();
+				while(fileReader.hasNextLine())
+				{
+					tempName = fileReader.next();
+					if(currentPlayer.getName().equals(allPlayers.findPlayer(tempName)))
+					{
+						StringTokenizer forHashMap = new StringTokenizer(fileReader.nextLine(), " =", false);
+						while(forHashMap.hasMoreTokens())
+						{
+							tempMapping.put((Integer)Integer.parseInt(forHashMap.nextToken()), forHashMap.nextToken().charAt(0));
+						}
+						tempPhrase = fileReader.next();
+						flag = true;
+						currentCryptogram = new LetterCryptogram(tempPhrase,tempMapping);
+					}
+					else
+					{
+						fileReader.nextLine();
+					}
+					if(!flag)
+					{
+						System.out.println("No saved game was found. Please save a game before loading :)");
+					}
+				}
+				
+			}
+			catch(FileNotFoundException e)
+			{
+				System.out.println("No saved game was found. Please save a game before loading :)");
+			}
 		}
+		
 	}
 	public void viewScoreboard() {
 
@@ -138,5 +201,9 @@ public class Game {
 	}
 	public void displaySolution() {
 
+	}
+	public Players getPlayers()
+	{
+		return allPlayers;
 	}
 }

@@ -26,7 +26,7 @@ public class Main {
                             newGame.viewScoreboard();
                             break;
                         case 4:
-                            exit = true;
+                            newGame.getPlayers().savePlayers();
                             return;
                         default:
                             System.out.println("Option " + choice + " is invalid. Please try again!");
