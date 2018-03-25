@@ -1,9 +1,10 @@
+import java.util.Comparator;
 
 public class Player
 {
 		private String name;
-		private float playerAccuracy;
-		private float avgCompletionTime;
+		private double playerAccuracy;
+		private double avgCompletionTime;
 		private int nrOfPlayedCryptograms;
 		private int nrOfCompletedCryptograms;
 		
@@ -15,6 +16,15 @@ public class Player
 			nrOfPlayedCryptograms = 0;
 			nrOfCompletedCryptograms = 0;
 		}
+		public Player(String name, double Acc, double Avg, int Played, int Comp)
+		{
+			this.name = name;
+			playerAccuracy = Acc;
+			avgCompletionTime = Avg;
+			nrOfPlayedCryptograms = Played;
+			nrOfCompletedCryptograms = Comp;
+		}
+		
 		public String getName()
 		{
 			return name;
@@ -25,12 +35,12 @@ public class Player
 		}
 		public void showStats()
 		{
-			System.out.println("This player's accuracy is: " + playerAccuracy + " .\n");
-			System.out.println("This player's average cryptogram completion time is: " + avgCompletionTime + " .\n");
-			System.out.println("This player has played " + nrOfPlayedCryptograms + " cryptograms.\n");
+			System.out.println("This player's accuracy is: " + playerAccuracy + " .");
+			System.out.println("This player's average cryptogram completion time is: " + avgCompletionTime + " .");
+			System.out.println("This player has played " + nrOfPlayedCryptograms + " cryptograms.");
 			System.out.println("This player has  completed " + nrOfCompletedCryptograms + " cryptograms.\n");
 		}
-		public void updateAccuracy(float lastRecAccuracy)
+		public void updateAccuracy(double lastRecAccuracy)
 		{
 			if(nrOfPlayedCryptograms == 1)
 			{
@@ -39,7 +49,7 @@ public class Player
 			}
 			playerAccuracy = (playerAccuracy + lastRecAccuracy) / nrOfPlayedCryptograms;
 		}
-		public void updateAvgTime(float lastRecTime)
+		public void updateAvgTime(double lastRecTime)
 		{
 			if(nrOfCompletedCryptograms == 1)
 			{
@@ -56,11 +66,11 @@ public class Player
 		{
 			nrOfCompletedCryptograms++;
 		}
-		public float getPlayerAccuracy()
+		public double getPlayerAccuracy()
 		{
 			return playerAccuracy;
 		}
-		public float getAvgCompletionTime()
+		public double getAvgCompletionTime()
 		{
 			return avgCompletionTime;
 		}
