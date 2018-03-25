@@ -1,10 +1,11 @@
-import java.util.ArrayList;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 public class Game {
 
-	private HashMap<Player, Game> playerGameMapping;
-	private LetterCryptogram currentCryptogram;
+	private HashMap<Player, Cryptogram> playerGameMapping;
+	private Cryptogram currentCryptogram;
 	private Player currentPlayer;
 	private Players allPlayers;
 	Scanner reader;
@@ -12,20 +13,40 @@ public class Game {
 	String currentLetter;
 
 	public Game() {
-		playerGameMapping =  new HashMap<Player, Game>();
+		playerGameMapping =  new HashMap<Player, Cryptogram>();
 		currentPlayer = new Player("");
 		reader = new Scanner(System.in);
 		currentPlayerName = null;
 		currentLetter = null;
-		allPlayers.getPlayers();
+		allPlayers = new Players();
+		//currentCryptogram = new Cryptogram();
 	}
 
 
 	public void loadPlayer() {
+		String option;
+		String name = "";
+		System.out.println("Type 1 to create a new account  ");
+		System.out.println("Type 2 to load to an existing one  ");
+		option = reader.next().toLowerCase();
 
+		if(option.equals("1")) {
 			System.out.println("Please enter your username: ");
-			currentPlayerName = reader.next();
-			System.out.println("Hi " + currentPlayerName);
+			name = reader.next();
+			allPlayers.addPlayer(name);
+			currentPlayer = allPlayers.findPlayer(name);
+		}
+		else if (option.equals("2")) {
+			System.out.println("Please enter your account name: ");
+			name = reader.next();
+			currentPlayer = allPlayers.findPlayer(name);
+		}
+		else {
+			System.out.println("Invalid option. Please try again.");
+		}
+		currentPlayerName = name;
+		System.out.println("Hi " + currentPlayerName);
+
 
 	}
 	public void playGame() {
@@ -38,8 +59,9 @@ public class Game {
 			System.out.println("Type 4 to save current progress");
 			System.out.println("Type 5 to show solution");
 			System.out.println("Type 6 to view the scoreboard");
-			System.out.println("Type 7 to start a new game");
-			System.out.println("Type 8 to exit");
+			System.out.println("Type 7 to reset");
+			System.out.println("Type 8 to start a new game");
+			System.out.println("Type 9 to exit");
 			choice = reader.nextInt();
 			System.out.println("Option " + choice + " chosen" );
 			switch (choice) {
@@ -62,20 +84,23 @@ public class Game {
 					viewScoreboard();
 					break;
 				case 7:
-					//
+					// reset
 					break;
 				case 8:
-					//
+					//start a new game
 					break;
+				case 9:
+					return;
 				default:
 					System.out.println("Option " + choice + " is not valid. Please try again");
 					break;
 			}
 		}
 	}
-	public Cryptogram generateCryptogram() {
-		//makeCryptogram();
-		return null;
+	public Cryptogram generateCryptogram()  {
+		CryptogramFactory factory = new CryptogramFactory();
+		return factory.makeCryptogram("number");
+
 	}
 	public void enterLetter() {
 		System.out.println("Enter a letter: ");
@@ -94,30 +119,86 @@ public class Game {
 		System.out.println("Would you like to save your progress?");
 		option = reader.next();
 		if(option.toLowerCase().equals("yes")){
-                //save current state
+			try
+			{
+				FileWriter fw = new FileWriter("savedGames.txt", true);
+				BufferedWriter bw = new BufferedWriter(fw);
+			    PrintWriter out = new PrintWriter(bw);
+			    out.print(currentPlayer.getName());
+			    out.print(" ");
+			    out.print(((LetterCryptogram)currentCryptogram).getEncryptedPhrase());
+			    out.print(" ");
+			    out.println(((LetterCryptogram)currentCryptogram).getLetterMapping());
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 		else {
-                //do nothing
+			return;
 		}
 
 
 	}
 	public void loadGame() {
-		if (true/*file not exists*/) {
-			System.out.println("No saved game was found. Please save a game before loading :)");
+		String option;
+		System.out.println("Would you like to load a game(if you have any saved?");
+		option = reader.next().toLowerCase();
+		if(option.equals("yes"))
+		{
+			try
+			{
+				File file = new File("savedGames.txt");
+				Scanner fileReader = new Scanner(file);
+				String tempName;
+				String tempPhrase;
+				boolean flag = false;
+				HashMap<Integer, Character> tempMapping = new HashMap<>();
+				while(fileReader.hasNextLine())
+				{
+					tempName = fileReader.next();
+					if(currentPlayer.getName().equals(allPlayers.findPlayer(tempName)))
+					{
+						StringTokenizer forHashMap = new StringTokenizer(fileReader.nextLine(), " =", false);
+						while(forHashMap.hasMoreTokens())
+						{
+							tempMapping.put((Integer)Integer.parseInt(forHashMap.nextToken()), forHashMap.nextToken().charAt(0));
+						}
+						tempPhrase = fileReader.next();
+						flag = true;
+						//currentCryptogram = new LetterCryptogram(tempPhrase,tempMapping);
+					}
+					else
+					{
+						fileReader.nextLine();
+					}
+					if(!flag)
+					{
+						System.out.println("No saved game was found. Please save a game before loading :)");
+					}
+				}
+				
+			}
+			catch(FileNotFoundException e)
+			{
+				System.out.println("No saved game was found. Please save a game before loading :)");
+			}
 		}
+		
 	}
 	public void viewScoreboard() {
 
-	allPlayers.getAllPlayersAccuracies();
-	allPlayers.getAllPlayersCryptogramsPlayed();
-	allPlayers.getAllPlayersCryptos();
-	allPlayers.getAllPlayersTimes();
+		allPlayers.showTop10();
 	}
 	public void getHint() {
 
 	}
 	public void displaySolution() {
 
+	}
+	public Players getPlayers()
+	{
+		return allPlayers;
 	}
 }
