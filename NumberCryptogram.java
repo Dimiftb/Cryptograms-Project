@@ -1,15 +1,14 @@
 import java.util.HashMap;
+import java.util.Map;
 
 public class NumberCryptogram extends Cryptogram{
 
-	HashMap<Integer, Character> NumberMapping;
+	HashMap<Object, Object> NumberMapping;
 	String sequence;
 
-	public NumberCryptogram(String sentence) {
-		sequence = sentence;
-		for (int i = 0; i < sequence.length(); i++) {
-			NumberMapping.put(i, sequence.charAt(i));
-		}
+	public NumberCryptogram(String sequence, Map<Integer,Character> mapping) {
+		super(sequence, mapping);
+
 	}
 
 	public char getLetter(int i) {
