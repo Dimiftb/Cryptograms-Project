@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.List;
 
 public class LetterCryptogram extends Cryptogram {
 
@@ -52,4 +53,33 @@ public class LetterCryptogram extends Cryptogram {
 		encryptedPhrase = encryptedPhraseBuild.toString();
 		return encryptedPhrase;
 	}
+
+
+	@Override
+	public boolean contains(String c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public List<Integer> getOccurencesOfLetter(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public String getProgress() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void updateProgress(List<Integer> numberList, String currentLetter) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
