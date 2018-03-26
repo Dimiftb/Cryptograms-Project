@@ -2,8 +2,8 @@ import java.util.HashMap;
 
 public class LetterCryptogram extends Cryptogram {
 
-	private HashMap<Integer, Character> letterMapping;
-	private HashMap<Character, Integer> keys;
+	private HashMap<Character, Character> letterMapping;
+	private HashMap<Character, Character> keys;
 	private String phrase;
 	private String encryptedPhrase;
 	
@@ -18,13 +18,16 @@ public class LetterCryptogram extends Cryptogram {
 			keys.put(phrase.charAt(i), randomNumber);
 		}
 	}*/
-	public LetterCryptogram(String encryptedPhrase, HashMap<Character, Character> letterMapping)
+	public LetterCryptogram(String encryptedPhrase, HashMap<Character, Character> letterMapping, HashMap<Character, Character> keys)
 	{
-		super(encryptedPhrase, letterMapping);
+		super(encryptedPhrase);
+		phrase = encryptedPhrase;
+		this.letterMapping = letterMapping;
+		this.keys = keys;
 	}
 
 
-	public HashMap<Integer, Character> getLetterMapping()
+	public HashMap<Character, Character> getMapping()
 	{
 		return letterMapping;
 	}
@@ -42,8 +45,9 @@ public class LetterCryptogram extends Cryptogram {
 		StringBuilder encryptedPhraseBuild = new StringBuilder();
 		for(int count = 0; count < phrase.length(); count++)
 		{
+			if(keys.get(phrase.charAt(count)) != null)
 			encryptedPhraseBuild.append(keys.get(phrase.charAt(count)));
-			encryptedPhraseBuild.append(",");
+			encryptedPhraseBuild.append(" ");
 		}
 		encryptedPhrase = encryptedPhraseBuild.toString();
 		return encryptedPhrase;

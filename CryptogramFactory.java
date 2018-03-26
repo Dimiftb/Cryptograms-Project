@@ -12,31 +12,41 @@ public class CryptogramFactory {
     }
 
     //change method return type
-    public LetterCryptogram makeCryptogram(String type) {
+    public Cryptogram makeCryptogram(String type) {
 
         String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         HashMap<Character, Character> letterMappings = new HashMap<Character, Character>();
         HashMap<Integer, Character> numberMappings = new HashMap<Integer, Character>();
-        HashMap<Integer, Character> letterKeys = new HashMap<Integer, Character>();
-        HashMap<Integer, Character> numberKeys = new HashMap<Integer, Character>();
+        HashMap<Character, Character> letterKeys = new HashMap<Character, Character>();
+        HashMap<Character, Integer> numberKeys = new HashMap<Character, Integer>();
 
-           String sentance = getPhrase();
+           String sentence = getPhrase();
+           System.out.println(sentence);
            if(type.equals("number")) {
-               for( int i = 0 ; i < sentance.length(); i++) {
-                   int m = rand.nextInt(sentance.length());
-                   numberMappings.put(m, sentance.charAt(i));
-                   numberKeys.put(i, sentance.charAt(i));
-                   NumberCryptogram cryptogram = new NumberCryptogram(sentance, numberMappings);
-                   //return new NumberCryptogram(sentance, numberMappings);
+               for( int i = 0 ; i < sentence.length(); i++) {
+            	   if(sentence.charAt(i) != ' ')
+            	   {
+            		   int m = rand.nextInt(100);
+                       numberMappings.put(m, sentence.charAt(i));
+                       numberKeys.put(sentence.charAt(i), m);
+            	   }
+                   
+                   
                }
+               NumberCryptogram cryptogram = new NumberCryptogram(sentence, numberMappings, numberKeys);
+               return cryptogram;
            }
            else if( type.equals("letter")) {
-                for(int i = 0; i < sentance.length(); i++) {
-                    char randomLetter = alphabet.charAt(rand.nextInt(sentance.length()));
-                    letterMappings.put(randomLetter,sentance.charAt(i));
-                    letterKeys.put(i,sentance.charAt(i));
-                    return new LetterCryptogram(sentance, letterMappings);
+                for(int i = 0; i < sentence.length(); i++) {
+                	if(sentence.charAt(i) != ' ')
+             	    {
+                		char randomLetter = alphabet.charAt(rand.nextInt(30));
+                		letterMappings.put(randomLetter,sentence.charAt(i));
+                		letterKeys.put(sentence.charAt(i), randomLetter);
+             	    }
+                   
                }
+               return new LetterCryptogram(sentence, letterMappings, letterKeys);
            }
            else {
                System.out.println("Currently supporting only two types of cryptograms");
@@ -53,14 +63,14 @@ public class CryptogramFactory {
                 boolean check = file.createNewFile();
                 System.out.println("file creation check: " + check);
             }
-            String[] sentances = new String[50];
+            String[] sentences = new String[50];
             int i = 0;
             while (reader.hasNext()) {
-                sentances[i] = reader.nextLine();
+                sentences[i] = reader.nextLine();
                 i++;
             }
             int randomNumber = rand.nextInt(i);
-            return sentances[randomNumber];
+            return sentences[randomNumber];
         } catch (IOException e) {
             System.out.println("File error");
         }

@@ -37,6 +37,11 @@ public class Game {
 			currentPlayer = allPlayers.findPlayer(name);
 		}
 		else if (option.equals("2")) {
+			System.out.println("Ok, here are the possibilities:");
+			for(Player pl: allPlayers.getPlayers())
+			{
+				System.out.println(pl.getName());
+			}
 			System.out.println("Please enter your account name: ");
 			name = reader.next();
 			currentPlayer = allPlayers.findPlayer(name);
@@ -46,10 +51,13 @@ public class Game {
 		}
 		currentPlayerName = name;
 		System.out.println("Hi " + currentPlayerName);
+		
 
 
 	}
 	public void playGame() {
+		currentCryptogram = generateCryptogram();
+		System.out.println(currentCryptogram.getEncryptedPhrase());
 		int choice;
 		boolean finishGameCheck = false;
 		while(!finishGameCheck) {
@@ -97,7 +105,7 @@ public class Game {
 			}
 		}
 	}
-	public Cryptogram generateCryptogram()  {
+	private Cryptogram generateCryptogram()  {
 		CryptogramFactory factory = new CryptogramFactory();
 		return factory.makeCryptogram("number");
 
@@ -118,17 +126,23 @@ public class Game {
 		String option;
 		System.out.println("Would you like to save your progress?");
 		option = reader.next();
+		System.out.println(option);
 		if(option.toLowerCase().equals("yes")){
 			try
 			{
 				FileWriter fw = new FileWriter("savedGames.txt", true);
 				BufferedWriter bw = new BufferedWriter(fw);
 			    PrintWriter out = new PrintWriter(bw);
-			    out.print(currentPlayer.getName());
-			    out.print(" ");
-			    out.print(((LetterCryptogram)currentCryptogram).getEncryptedPhrase());
-			    out.print(" ");
-			    out.println(((LetterCryptogram)currentCryptogram).getLetterMapping());
+			    System.out.println(currentPlayer.getName());
+			    out.println(currentPlayer.getName());
+			    out.println(currentCryptogram.getPhrase());
+			    System.out.println(currentCryptogram.getEncryptedPhrase());
+			    out.println(currentCryptogram.getEncryptedPhrase());
+			    System.out.println(currentCryptogram.getMapping());
+			    out.println(currentCryptogram.getMapping());
+			    out.close();
+			    bw.close();
+			    fw.close();
 			}
 			catch(Exception e)
 			{
@@ -153,21 +167,30 @@ public class Game {
 				Scanner fileReader = new Scanner(file);
 				String tempName;
 				String tempPhrase;
+				String tempEncPhrase;
 				boolean flag = false;
 				HashMap<Integer, Character> tempMapping = new HashMap<>();
+				HashMap<Character, Integer>  tempKeys = new HashMap<>();
 				while(fileReader.hasNextLine())
 				{
-					tempName = fileReader.next();
+					tempName = fileReader.nextLine();
+					//I believe  the problem is here!!!
 					if(currentPlayer.getName().equals(allPlayers.findPlayer(tempName)))
 					{
-						StringTokenizer forHashMap = new StringTokenizer(fileReader.nextLine(), " =", false);
+						tempPhrase = fileReader.nextLine();
+						tempEncPhrase = fileReader.nextLine();
+						StringTokenizer forHashMap = new StringTokenizer(fileReader.nextLine(), "{} =", false);
 						while(forHashMap.hasMoreTokens())
 						{
-							tempMapping.put((Integer)Integer.parseInt(forHashMap.nextToken()), forHashMap.nextToken().charAt(0));
+							int firstToken = (Integer)Integer.parseInt(forHashMap.nextToken());
+							char secondToken = forHashMap.nextToken().charAt(0);
+							tempMapping.put(firstToken, secondToken);
+							tempKeys.put(secondToken, firstToken);
+							
 						}
-						tempPhrase = fileReader.next();
+						
 						flag = true;
-						//currentCryptogram = new LetterCryptogram(tempPhrase,tempMapping);
+						currentCryptogram = new NumberCryptogram(tempPhrase, tempEncPhrase, tempMapping, tempKeys);
 					}
 					else
 					{
@@ -178,6 +201,7 @@ public class Game {
 						System.out.println("No saved game was found. Please save a game before loading :)");
 					}
 				}
+				fileReader.close();
 				
 			}
 			catch(FileNotFoundException e)

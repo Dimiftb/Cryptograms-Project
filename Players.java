@@ -84,7 +84,7 @@ public class Players
 		}
 		
 		players.add(new Player(newName, 0, 0, 0, 0));
-			
+		
 		playersCount++;
 		
 		
@@ -117,7 +117,10 @@ public class Players
 	{
 		return  playersCount;
 	}
-	
+	public List<Player> getPlayers()
+	{
+		return players;
+	}
 	public void savePlayers()
 	{
 		
@@ -160,7 +163,7 @@ public class Players
 				return -1;
 		    }
 		});
-		for(int count = 0;count < 10; count++)
+		for(int count = 0;count < 10 && count< playersCount; count++)
 		{
 			System.out.print(players.get(count).getName());
 			System.out.print(": ");

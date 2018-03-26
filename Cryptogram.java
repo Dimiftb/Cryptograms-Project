@@ -1,15 +1,13 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Cryptogram {
+public abstract class Cryptogram {
 
-	String phrase;
-	HashMap<Object, Object> symbolMapping;
+	private String phrase;
+	
 
-	public Cryptogram(String encryptedPhrase, Map<?, ?> mapping) {
+	public Cryptogram(String encryptedPhrase) {
  		phrase = encryptedPhrase;
- 		symbolMapping = new HashMap<>();
- 		symbolMapping.putAll(mapping);
 	}
 
 	public HashMap<Character, Integer> getFrequencies() {
@@ -28,5 +26,10 @@ public class Cryptogram {
 		return frequencies;
 
 	}
-	
+	public String getPhrase()
+	{
+		return phrase;
+	}
+	public abstract HashMap<?, ?> getMapping();
+	public abstract String getEncryptedPhrase();
 }
