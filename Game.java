@@ -56,6 +56,7 @@ public class Game {
 
 	}
 	public void playGame() {
+		if(currentCryptogram == null)
 		currentCryptogram = generateCryptogram();
 		System.out.println(currentCryptogram.getEncryptedPhrase());
 		int choice;
@@ -105,6 +106,7 @@ public class Game {
 			}
 		}
 	}
+	
 	private Cryptogram generateCryptogram()  {
 		CryptogramFactory factory = new CryptogramFactory();
 		return factory.makeCryptogram("number");
@@ -175,7 +177,7 @@ public class Game {
 				{
 					tempName = fileReader.nextLine();
 					//I believe  the problem is here!!!
-					if(currentPlayer.getName().equals(allPlayers.findPlayer(tempName)))
+					if(currentPlayer.getName().equals(allPlayers.findPlayer(tempName).getName()))
 					{
 						tempPhrase = fileReader.nextLine();
 						tempEncPhrase = fileReader.nextLine();
@@ -209,7 +211,7 @@ public class Game {
 				System.out.println("No saved game was found. Please save a game before loading :)");
 			}
 		}
-		
+		playGame();
 	}
 	public void viewScoreboard() {
 

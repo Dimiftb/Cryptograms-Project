@@ -70,7 +70,9 @@ public class CryptogramFactory {
                 i++;
             }
             int randomNumber = rand.nextInt(i);
+            reader.close();
             return sentences[randomNumber];
+            
         } catch (IOException e) {
             System.out.println("File error");
         }

@@ -38,7 +38,7 @@ public class PlayersTest
 	@Test
 	public void findPlayerTest()
 	{
-		assertEquals(game.getPlayerCount(), 15);
+		
 		assertEquals(game.findPlayer("4").getName(), "4");
 	}
 	@Test
