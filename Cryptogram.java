@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class Cryptogram {
@@ -32,4 +33,8 @@ public abstract class Cryptogram {
 	}
 	public abstract HashMap<?, ?> getMapping();
 	public abstract String getEncryptedPhrase();
+	public abstract boolean contains(String c);
+	public abstract List<Integer> getOccurencesOfLetter(String s);
+	public abstract String getProgress();
+	public abstract void updateProgress(List<Integer> numberList, String currentLetter);
 }
