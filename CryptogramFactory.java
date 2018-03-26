@@ -19,9 +19,10 @@ public class CryptogramFactory {
         HashMap<Integer, Character> numberMappings = new HashMap<Integer, Character>();
         HashMap<Character, Character> letterKeys = new HashMap<Character, Character>();
         HashMap<Character, Integer> numberKeys = new HashMap<Character, Integer>();
+        HashMap<Character, String> progressMapping = new  HashMap<Character, String>();
 
            String sentence = getPhrase();
-           System.out.println(sentence);
+           //System.out.println(sentence);
            if(type.equals("number")) {
                for( int i = 0 ; i < sentence.length(); i++) {
             	   if(sentence.charAt(i) != ' ')
@@ -29,11 +30,13 @@ public class CryptogramFactory {
             		   int m = rand.nextInt(100);
                        numberMappings.put(m, sentence.charAt(i));
                        numberKeys.put(sentence.charAt(i), m);
+                       progressMapping.put(sentence.charAt(i), Integer.toString(m));
             	   }
                    
                    
                }
-               NumberCryptogram cryptogram = new NumberCryptogram(sentence, numberMappings, numberKeys);
+               NumberCryptogram cryptogram = new NumberCryptogram(sentence, numberMappings, numberKeys, progressMapping);
+               //cryptogram.resetProgress();
                return cryptogram;
            }
            else if( type.equals("letter")) {
