@@ -101,7 +101,7 @@ public class Game {
 				viewScoreboard();
 				break;
 			case 7:
-				// reset
+				resetProgress();
 				break;
 			case 8:
 				// start a new game
@@ -202,6 +202,7 @@ public class Game {
 
 						flag = true;
 						currentCryptogram = new NumberCryptogram(tempPhrase, tempEncPhrase, tempMapping, tempKeys);
+						//The progress needs to be saved now too then passed into the constructor - didn't want to mess up the code though
 					} else {
 						fileReader.nextLine();
 					}
@@ -235,5 +236,9 @@ public class Game {
 
 	public Players getPlayers() {
 		return allPlayers;
+	}
+	
+	public void resetProgress(){
+		currentCryptogram.resetProgress();
 	}
 }
