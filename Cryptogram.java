@@ -37,4 +37,5 @@ public abstract class Cryptogram {
 	public abstract List<Integer> getOccurencesOfLetter(String s);
 	public abstract String getProgress();
 	public abstract void updateProgress(List<Integer> numberList, String currentLetter);
+	public abstract void resetProgress();
 }
