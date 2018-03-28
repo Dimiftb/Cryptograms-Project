@@ -4,7 +4,7 @@ public class Player
 {
 		private String name;
 		private double playerAccuracy;
-		private double avgCompletionTime;
+		private int avgCompletionTime;
 		private int nrOfPlayedCryptograms;
 		private int nrOfCompletedCryptograms;
 		
@@ -16,7 +16,7 @@ public class Player
 			nrOfPlayedCryptograms = 0;
 			nrOfCompletedCryptograms = 0;
 		}
-		public Player(String name, double Acc, double Avg, int Played, int Comp)
+		public Player(String name, double Acc, int Avg, int Played, int Comp)
 		{
 			this.name = name;
 			playerAccuracy = Acc;
@@ -49,7 +49,7 @@ public class Player
 			}
 			playerAccuracy = (playerAccuracy + lastRecAccuracy) / nrOfPlayedCryptograms;
 		}
-		public void updateAvgTime(double lastRecTime)
+		public void updateAvgTime(int lastRecTime)
 		{
 			if(nrOfCompletedCryptograms == 1)
 			{
@@ -70,7 +70,7 @@ public class Player
 		{
 			return playerAccuracy;
 		}
-		public double getAvgCompletionTime()
+		public int getAvgCompletionTime()
 		{
 			return avgCompletionTime;
 		}

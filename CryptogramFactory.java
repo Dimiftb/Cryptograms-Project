@@ -20,22 +20,38 @@ public class CryptogramFactory {
         HashMap<Character, Character> letterKeys = new HashMap<Character, Character>();
         HashMap<Character, Integer> numberKeys = new HashMap<Character, Integer>();
         HashMap<Character, String> progressMapping = new  HashMap<Character, String>();
-
+        HashMap<String, Character> opMapping = new  HashMap<String, Character>();
+        HashMap<String, Character> origIntToChar = new  HashMap<String, Character>();
+        int m;
            String sentence = getPhrase();
-           //System.out.println(sentence);
+           
            if(type.equals("number")) {
                for( int i = 0 ; i < sentence.length(); i++) {
             	   if(sentence.charAt(i) != ' ')
             	   {
-            		   int m = rand.nextInt(100);
+            		   if(!numberMappings.containsValue(sentence.charAt(i)))
+            		   {
+	            		   m = rand.nextInt(101)+1;
+	            		   while(numberMappings.containsKey(m))
+	            		   {	
+	            			   System.out.println("m value: " + m);
+	            			   m = rand.nextInt(101)+1;
+	            		   }
+            		   }
+            		   else
+            		   {
+            			   m = numberKeys.get(sentence.charAt(i));
+            		   }
                        numberMappings.put(m, sentence.charAt(i));
                        numberKeys.put(sentence.charAt(i), m);
                        progressMapping.put(sentence.charAt(i), Integer.toString(m));
+                       opMapping.put(Integer.toString(m), sentence.charAt(i));
+                      
             	   }
                    
                    
                }
-               NumberCryptogram cryptogram = new NumberCryptogram(sentence, numberMappings, numberKeys, progressMapping);
+               NumberCryptogram cryptogram = new NumberCryptogram(sentence, numberMappings, numberKeys, progressMapping, opMapping);
                //cryptogram.resetProgress();
                return cryptogram;
            }

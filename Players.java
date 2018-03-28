@@ -27,7 +27,7 @@ public class Players
 		File file = new File("accounts.txt");
 		String tempName;
 		double tempAccuracy;
-		double tempAvg;
+		int tempAvg;
 		int tempCompleted;
 		int tempPlayed;
 		try
@@ -44,7 +44,7 @@ public class Players
 				
 				tempName = readFile.next();
 				tempAccuracy = readFile.nextDouble();
-				tempAvg = readFile.nextDouble();
+				tempAvg = readFile.nextInt();
 				tempPlayed = readFile.nextInt();
 				tempCompleted = readFile.nextInt();
 				players.add(new Player(tempName, tempAccuracy, tempAvg, tempPlayed, tempCompleted));

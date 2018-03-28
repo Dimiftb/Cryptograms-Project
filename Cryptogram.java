@@ -33,9 +33,11 @@ public abstract class Cryptogram {
 	}
 	public abstract HashMap<?, ?> getMapping();
 	public abstract String getEncryptedPhrase();
-	public abstract boolean contains(String c);
-	public abstract List<Integer> getOccurencesOfLetter(String s);
 	public abstract String getProgress();
-	public abstract void updateProgress(List<Integer> numberList, String currentLetter);
+	public abstract void updateProgress(String currentLetter, String currentNumber);
 	public abstract void resetProgress();
+	public abstract void undo(char c);
+	public abstract void getOneHint();
+	public abstract boolean completeCheck();
+	public abstract HashMap<?, ?> getProgressMap();
 }

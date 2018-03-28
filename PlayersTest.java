@@ -15,7 +15,6 @@ public class PlayersTest
 		game.addPlayer("Josh");
 		game.addPlayer("Paul");
 		game.addPlayer("Idk");
-		game.addPlayer("Nobody cares");
 		game.addPlayer("Again");
 		game.addPlayer("1");
 		game.addPlayer("2");
@@ -33,7 +32,7 @@ public class PlayersTest
 	public void addPlayerTest()
 	{
 		game.addPlayer("Nerd");
-		assertEquals(game.getPlayerCount(), 16);
+		assertEquals(game.getPlayers().size(), 14);
 	}
 	@Test
 	public void findPlayerTest()
@@ -45,7 +44,7 @@ public class PlayersTest
 	public void removePlayerTest()
 	{
 		game.removePlayer("Mark");
-		assertEquals(game.getPlayerCount(), 14);
+		assertEquals(game.getPlayers().size(), 12);
 	}
 	
 

@@ -1,8 +1,11 @@
 import java.io.*;
+import java.util.Random;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
+import java.util.Timer;
 
 public class Game {
 
@@ -13,6 +16,7 @@ public class Game {
 	Scanner reader;
 	String currentPlayerName;
 	String currentLetter;
+	MyTimer t;
 
 	public Game() {
 		playerGameMapping = new HashMap<Player, Cryptogram>();
@@ -30,6 +34,11 @@ public class Game {
 		System.out.println("Type 1 to create a new account  ");
 		System.out.println("Type 2 to load to an existing one  ");
 		option = reader.next().toLowerCase();
+		if (!option.equals("1") && !option.equals("2")) {
+			System.out.println("Invalid option. Please choose between 1 or 2. Thanks");
+			reader.nextLine();
+			loadPlayer();
+		}
 
 		if (option.equals("1")) {
 			System.out.println("Please enter your username: ");
@@ -61,13 +70,16 @@ public class Game {
 	}
 
 	public void playGame() {
+		int hints = 0;
+		currentPlayer.incrementPlayedCryptos();
+		t = new MyTimer();
 		if (currentCryptogram == null)
 			currentCryptogram = generateCryptogram();
-		
+
 		int choice;
 		boolean finishGameCheck = false;
-		//System.out.println(currentCryptogram.getEncryptedPhrase());
-		//System.out.println("cryptogram printed");
+		// System.out.println(currentCryptogram.getEncryptedPhrase());
+		// System.out.println("cryptogram printed");
 		while (!finishGameCheck) {
 			System.out.println(currentCryptogram.getProgress());
 			System.out.println("Type 1 to enter a letter");
@@ -79,24 +91,51 @@ public class Game {
 			System.out.println("Type 7 to reset");
 			System.out.println("Type 8 to start a new game");
 			System.out.println("Type 9 to exit");
+			System.out.print("Your choice: ");
 			choice = reader.nextInt();
 			System.out.println("Option " + choice + " chosen");
 			switch (choice) {
 			case 1:
 				enterLetter();
+				if (currentCryptogram.completeCheck()) {
+					System.out.println("Well done you won!");
+					t.stopTimer();
+					currentPlayer.incrementCompletedCryptos();
+					currentPlayer.updateAvgTime(t.getInterval());
+
+					currentCryptogram.resetProgress();
+					return;
+				}
 				break;
 			case 2:
 				undoLetter();
 				break;
 			case 3:
-				getHint();
+				if (hints < 5) {
+					getHint();
+					t.penaltyTime();
+					if (currentCryptogram.completeCheck()) {
+						System.out.println("Well done you won!");
+						currentCryptogram.resetProgress();
+						t.stopTimer();
+						System.out.print(t.getInterval());
+						currentPlayer.incrementCompletedCryptos();
+						currentPlayer.updateAvgTime(t.getInterval());
+						hints++;
+					} else {
+						System.out.println("Out of hints!");
+					}
+					return;
+				}
 				break;
 			case 4:
 				saveGame();
 				break;
 			case 5:
 				displaySolution();
-				break;
+
+				t.stopTimer();
+				return;
 			case 6:
 				viewScoreboard();
 				break;
@@ -104,7 +143,7 @@ public class Game {
 				resetProgress();
 				break;
 			case 8:
-				// start a new game
+				currentCryptogram = generateCryptogram();
 				break;
 			case 9:
 				return;
@@ -122,34 +161,46 @@ public class Game {
 	}
 
 	public void enterLetter() {
-		System.out.println("Enter a letter: ");
-		currentLetter = reader.next();
-		if (currentCryptogram.contains(currentLetter)) {
-			// find index of all of these letters in the cryptogram and replace the instances of it
-			List<Integer> numberList = currentCryptogram.getOccurencesOfLetter(currentLetter);
-			currentCryptogram.updateProgress(numberList, currentLetter);
-		} else {
-			System.out.println("This letter is not present!");
+
+		try {
+			System.out.println("Enter a number in the cryptogram");
+			String currentNumber = reader.next();
+			System.out.println("Enter a letter: ");
+			currentLetter = reader.next();
+			if (currentCryptogram.getPhrase().contains(currentLetter)
+					&& currentCryptogram.getEncryptedPhrase().contains(currentNumber)) {
+				// find index of all of these letters in the cryptogram and
+				// replace the instances of it
+
+				currentCryptogram.updateProgress(currentLetter, currentNumber);
+			} else {
+				System.out.println("This letter is not present!");
+			}
+		} catch (InputMismatchException e) {
+			System.out.println("Invalid input. Please try again.");
 		}
+
 	}
 
 	public void undoLetter() {
-		System.out.println("Undo letter: ");
+		System.out.println("Enter a letter in the cryptogram that you want to undo: ");
 		currentLetter = reader.next();
+		currentCryptogram.undo(currentLetter.charAt(0));
 	}
 
 	public void viewFrequencies() {
-		// getFrenquencies();
+		System.out.println("Frequencies: " + currentCryptogram.getFrequencies());
 	}
 
 	public void saveGame() {
 		String option;
 		System.out.println("Would you like to save your progress?");
+		System.out.println("Type yes or no");
 		option = reader.next();
 		System.out.println(option);
 		if (option.toLowerCase().equals("yes")) {
 			try {
-				FileWriter fw = new FileWriter("savedGames.txt", true);
+				FileWriter fw = new FileWriter("savedGames" + currentPlayerName + ".txt", false);
 				BufferedWriter bw = new BufferedWriter(fw);
 				PrintWriter out = new PrintWriter(bw);
 				System.out.println(currentPlayer.getName());
@@ -159,13 +210,19 @@ public class Game {
 				out.println(currentCryptogram.getEncryptedPhrase());
 				System.out.println(currentCryptogram.getMapping());
 				out.println(currentCryptogram.getMapping());
+				out.println(currentCryptogram.getProgressMap());
+				out.println(t.getInterval());
 				out.close();
 				bw.close();
 				fw.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
+		} else if (option.toLowerCase().equals("no")) {
+			return;
 		} else {
+			System.out.println("Invalid option please choose again");
 			return;
 		}
 
@@ -177,7 +234,7 @@ public class Game {
 		option = reader.next().toLowerCase();
 		if (option.equals("yes")) {
 			try {
-				File file = new File("savedGames.txt");
+				File file = new File("savedGames" + currentPlayerName + ".txt");
 				Scanner fileReader = new Scanner(file);
 				String tempName;
 				String tempPhrase;
@@ -185,24 +242,37 @@ public class Game {
 				boolean flag = false;
 				HashMap<Integer, Character> tempMapping = new HashMap<>();
 				HashMap<Character, Integer> tempKeys = new HashMap<>();
+				HashMap<Character, String> tempProgressMap = new HashMap<>();
+				HashMap<String, Character> oppositeTempProgressMap = new HashMap<>();
 				while (fileReader.hasNextLine()) {
 					tempName = fileReader.nextLine();
 					// I believe the problem is here!!!
 					if (currentPlayer.getName().equals(allPlayers.findPlayer(tempName).getName())) {
 						tempPhrase = fileReader.nextLine();
 						tempEncPhrase = fileReader.nextLine();
-						StringTokenizer forHashMap = new StringTokenizer(fileReader.nextLine(), "{} =", false);
+						StringTokenizer forHashMap = new StringTokenizer(fileReader.nextLine(), "{}, =", false);
 						while (forHashMap.hasMoreTokens()) {
 							int firstToken = (Integer) Integer.parseInt(forHashMap.nextToken());
 							char secondToken = forHashMap.nextToken().charAt(0);
 							tempMapping.put(firstToken, secondToken);
 							tempKeys.put(secondToken, firstToken);
-
+						}
+						StringTokenizer forProgressMap = new StringTokenizer(fileReader.nextLine(), "{}, =", false);
+						while (forProgressMap.hasMoreTokens()) {
+							char firstToken = forProgressMap.nextToken().charAt(0);
+							String secondToken = forProgressMap.nextToken();
+							tempProgressMap.put(firstToken, secondToken);
+							oppositeTempProgressMap.put(secondToken, firstToken);
 						}
 
+						t.setInterval(fileReader.nextInt());
 						flag = true;
-						currentCryptogram = new NumberCryptogram(tempPhrase, tempEncPhrase, tempMapping, tempKeys);
-						//The progress needs to be saved now too then passed into the constructor - didn't want to mess up the code though
+						System.out.println("Welcome back to your saved game.");
+						currentCryptogram = new NumberCryptogram(tempPhrase, tempMapping, tempKeys, tempProgressMap,
+								oppositeTempProgressMap);
+						// The progress needs to be saved now too then passed
+						// into the constructor - didn't want to mess up the
+						// code though
 					} else {
 						fileReader.nextLine();
 					}
@@ -215,7 +285,7 @@ public class Game {
 			} catch (FileNotFoundException e) {
 				System.out.println("No saved game was found. Please save a game before loading :)");
 			} catch (NullPointerException e) {
-				System.out.println("Null pointer exception! Did you try loading a file that wasnt there?");
+
 			}
 		}
 		playGame();
@@ -227,7 +297,7 @@ public class Game {
 	}
 
 	public void getHint() {
-
+		currentCryptogram.getOneHint();
 	}
 
 	public void displaySolution() {
@@ -237,8 +307,24 @@ public class Game {
 	public Players getPlayers() {
 		return allPlayers;
 	}
-	
-	public void resetProgress(){
+
+	public void resetProgress() {
 		currentCryptogram.resetProgress();
+	}
+
+	public void help() {
+		System.out.println("Welcome to the help section! What do you need help with?");
+		System.out.println("Type 1 to get help with how to play the game ");
+		System.out.println("Type 2 to get help with how to move around in the menu");
+		String random = reader.next();
+		switch (random) {
+		case "1":
+			System.out.println("The numbers");
+			break;
+		case "2":
+			break;
+		default:
+			break;
+		}
 	}
 }

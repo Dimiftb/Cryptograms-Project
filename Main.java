@@ -14,6 +14,7 @@ public class Main {
                     System.out.println("Type 2 to load a previous game");
                     System.out.println("Type 3 to view the scoreboard");
                     System.out.println("Type 4 to exit");
+                    System.out.println("Type 5 for help");
                     choice = reader.nextInt();
                     switch (choice) {
                         case 1:
@@ -27,7 +28,9 @@ public class Main {
                             break;
                         case 4:
                             newGame.getPlayers().savePlayers();
-                            return;
+                            System.exit(0);
+                        case 5:
+                        	newGame.help();
                         default:
                             System.out.println("Option " + choice + " is invalid. Please try again!");
                             break;

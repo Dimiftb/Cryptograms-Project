@@ -41,33 +41,6 @@ public class LetterCryptogram extends Cryptogram {
 		}
 
 	}
-	public String getEncryptedPhrase()
-	{
-		StringBuilder encryptedPhraseBuild = new StringBuilder();
-		for(int count = 0; count < phrase.length(); count++)
-		{
-			if(keys.get(phrase.charAt(count)) != null)
-			encryptedPhraseBuild.append(keys.get(phrase.charAt(count)));
-			encryptedPhraseBuild.append(" ");
-		}
-		encryptedPhrase = encryptedPhraseBuild.toString();
-		return encryptedPhrase;
-	}
-
-
-	@Override
-	public boolean contains(String c) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public List<Integer> getOccurencesOfLetter(String s) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 	@Override
 	public String getProgress() {
@@ -76,10 +49,49 @@ public class LetterCryptogram extends Cryptogram {
 	}
 
 
+
+	public void resetProgress()
+	{
+		
+	}
+
+
 	@Override
-	public void updateProgress(List<Integer> numberList, String currentLetter) {
+	public void updateProgress(String currentLetter, String currentNumber) {
 		// TODO Auto-generated method stub
 		
 	}
+	public void undo(char c)
+	{
+		
+	}
+
+
+	@Override
+	public void getOneHint() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public String getEncryptedPhrase() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean completeCheck() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public HashMap<?, ?> getProgressMap() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }
