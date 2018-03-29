@@ -83,8 +83,6 @@ public class Game {
             currentCryptogram = generateCryptogram();
 
         int choice;
-        // System.out.println(currentCryptogram.getEncryptedPhrase());
-        // System.out.println("cryptogram printed");
         while (true) {
             System.out.println(currentCryptogram.getProgress());
             System.out.println("Type 1 to enter a letter");
@@ -112,7 +110,7 @@ public class Game {
                     undoLetter();
                     break;
                 case 3:
-                    if (hints < 5) {
+                    if (hints <4) {
                         getHint();
                         t.penaltyTime();
                         if (currentCryptogram.completeCheck()) {
@@ -122,11 +120,13 @@ public class Game {
                             System.out.print(t.getInterval());
                             currentPlayer.incrementCompletedCryptos();
                             currentPlayer.updateAvgTime(t.getInterval());
-                            hints++;
-                        } else {
-                            System.out.println("Out of hints!");
+
                         }
-                        return;
+                        hints++;
+                        break;
+                    }
+                    else {
+                        System.out.println("Out of hints!");
                     }
                     break;
                 case 4:
@@ -179,8 +179,19 @@ public class Game {
 
     private Cryptogram generateCryptogram() {
         CryptogramFactory factory = new CryptogramFactory();
-        return factory.makeCryptogram("number");
-
+        System.out.println("Symbols for encrypting cryptogram");
+        System.out.println("1 - numbers");
+        System.out.println("2 - letters");
+        System.out.print("Your choice:");
+        int input = reader.nextInt();
+        if (input == 1) {
+            return factory.makeCryptogram("number");
+        } else if (input == 2) {
+            return factory.makeCryptogram("letter");
+        } else {
+            System.out.println("Invalid choice. We only have 2 types of symbols. Please try again.");
+            return generateCryptogram();
+        }
     }
 
     public void enterLetter() {
@@ -341,7 +352,7 @@ public class Game {
             System.out.println("Welcome to the help section!");
             System.out.println("Description: ");
             System.out.println("1 - enter a letter - choosing option 1 you will be prompted to choose the position you want to place a letter from the alphabet in order to crack the cypher.");
-            System.out.println(" 2 - removing a letter -if you change your mind about a previous decision you can always undo a letter you've placed and replace it with a new one. ");
+            System.out.println("2 - removing a letter -if you change your mind about a previous decision you can always undo a letter you've placed and replace it with a new one. ");
             System.out.println("3 - get a hint - you're stuck? Don't worry! You can use one of your hints. If you use one of your hints one letter from the cypher will be revealed to you. Just don't forget you can use a maximum of 4 hints.");
             System.out.println("4 - save current progress - If you'd like to continue your game later on you can save it, so that later on you can continue from where you left.");
             System.out.println("5 - show solution  - Perhaps you're stuck and out of hints, or maybe you just want to see the solution, option 5 will display it to you.");

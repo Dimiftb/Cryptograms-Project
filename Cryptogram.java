@@ -38,7 +38,7 @@ public abstract class Cryptogram {
 			if (!progressMap.isEmpty()) {
 				for (int i = 0; i < phrase.length(); i++) {
 					if (phrase.charAt(i) != ' ') {
-						progress += progressMap.get(phrase.charAt(i));
+					    progress += progressMap.get(phrase.charAt(i));
 					} else {
 						progress += " ";
 					}
