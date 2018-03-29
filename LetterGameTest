@@ -1,0 +1,62 @@
+import static org.junit.Assert.*;
+
+import java.util.HashMap;
+
+import org.junit.Before;
+import org.junit.Test;
+
+    public class LetterGameTest {
+        private Cryptogram crypt;
+
+
+        @Before
+        public void setUp() {
+            String phrase = "test";
+            HashMap<Character, Character> testMap = new HashMap<Character, Character>();
+            HashMap<Character, Character> testMap2 = new HashMap<Character, Character>();
+            HashMap<Character, String> ptestMap = new HashMap<Character, String>();
+            HashMap<String, Character>  ptestMap2 = new HashMap<String, Character>();
+            testMap.put('a', 't');
+            testMap.put('b', 'e');
+            testMap.put('c', 's');
+            testMap2.put('t', 'a');
+            testMap2.put('e', 'b');
+            testMap2.put('s', 'c');
+            ptestMap.put('t', "a");
+            ptestMap.put('e', "b");
+            ptestMap.put('s', "c");
+            ptestMap2.put("a", 't');
+            ptestMap2.put("b", 'e');
+            ptestMap2.put("c", 's');
+
+            crypt = new LetterCryptogram(phrase, testMap, testMap2, ptestMap, ptestMap2);
+            // Cryptogram test = new NumberCryptogram
+        }
+
+        @Test
+        public void getPhraseTest() {
+            assertEquals(crypt.getPhrase(), "test");
+        }
+
+        @Test
+        public void incompleteCheckTest() {
+            assertEquals(crypt.completeCheck(), false);
+        }
+
+        @Test
+        public void progressTest(){
+            assertEquals(crypt.getProgress(), "a b c a ");
+            crypt.updateProgress("t", "a");
+            assertEquals(crypt.getProgress(), "t b c t ");
+        }
+
+        public void completeCheckTest() {
+            crypt.updateProgress("t", "a");
+            crypt.updateProgress("e", "b");
+            crypt.updateProgress("s", "c");
+            assertEquals(crypt.completeCheck(), true);
+        }
+
+    }
+
+
