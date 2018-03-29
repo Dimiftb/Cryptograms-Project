@@ -3,28 +3,24 @@ import java.util.List;
 
 public class LetterCryptogram extends Cryptogram {
 
-	private HashMap<Character, Character> letterMapping;
-	private HashMap<Character, Character> keys;
 	private String phrase;
-	private String encryptedPhrase;
-	
-	
-	/*public LetterCryptogram(String sentance, HashMap<Character, Character> letterMappings) {
-		Random randMapping = new Random();
-		int randomNumber;
-		phrase = super.phrase;
-		for (int i = 0; i < phrase.length(); i++) {
-			randomNumber = randMapping.nextInt();
-			letterMapping.put(randomNumber, phrase.charAt(i));
-			keys.put(phrase.charAt(i), randomNumber);
-		}
-	}*/
-	public LetterCryptogram(String encryptedPhrase, HashMap<Character, Character> letterMapping, HashMap<Character, Character> keys)
+
+	private HashMap<Character, Character> letterMapping;
+	private HashMap<Character, Character> convenienceKeys;
+	private HashMap<Character, String> progressMap;
+	private HashMap<String, Character> oppositeMap;
+
+
+
+
+	public LetterCryptogram(String sequence, HashMap<Character, Character> mapping, HashMap<Character, Character> keys, HashMap<Character, String> progress,  HashMap<String, Character> opposite)
 	{
-		super(encryptedPhrase);
-		phrase = encryptedPhrase;
-		this.letterMapping = letterMapping;
-		this.keys = keys;
+		super(sequence, mapping, keys, progress, opposite);
+		phrase = sequence;
+		letterMapping = mapping;
+		convenienceKeys = keys;
+		progressMap = progress;
+		oppositeMap = opposite;
 	}
 
 
@@ -75,23 +71,11 @@ public class LetterCryptogram extends Cryptogram {
 
 
 	@Override
-	public String getEncryptedPhrase() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean completeCheck() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-
-	@Override
-	public HashMap<?, ?> getProgressMap() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 
 }

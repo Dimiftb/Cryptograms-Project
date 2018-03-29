@@ -30,7 +30,7 @@ public class Main {
                             newGame.getPlayers().savePlayers();
                             System.exit(0);
                         case 5:
-                        	newGame.help();
+                        	newGame.help("menu");
                         default:
                             System.out.println("Option " + choice + " is invalid. Please try again!");
                             break;

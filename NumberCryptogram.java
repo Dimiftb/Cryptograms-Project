@@ -11,11 +11,11 @@ public class NumberCryptogram extends Cryptogram {
 	private HashMap<Character, Integer> convenienceKeys;
 	private HashMap<Character, String> progressMap;
 	private HashMap<String, Character> oppositeMap;
-	private HashMap<String, Character> origIntToOrigChar;
+
 
 	public NumberCryptogram(String sequence, HashMap<Integer, Character> mapping, HashMap<Character, Integer> keys,
 			HashMap<Character, String> progress, HashMap<String, Character> opposite) {
-		super(sequence);
+		super(sequence, mapping, keys, progress, opposite);
 		phrase = sequence;
 		numberMapping = mapping;
 		convenienceKeys = keys;
@@ -34,55 +34,11 @@ public class NumberCryptogram extends Cryptogram {
 		return numberMapping;
 	}
 
-	public char getLetter(int i) {
-		return phrase.charAt(i);
-	}
-
-	public String getEncryptedPhrase() {
-		StringBuilder encryptedPhraseBuild = new StringBuilder();
-		for (int count = 0; count < phrase.length(); count++) {
-			if (convenienceKeys.get(phrase.charAt(count)) != null)
-				encryptedPhraseBuild.append(convenienceKeys.get(phrase.charAt(count)));
-			encryptedPhraseBuild.append(" ");
-		}
-		encryptedPhrase = encryptedPhraseBuild.toString();
-		return encryptedPhrase;
-	}
-
-	public String getProgress() {
-		String progress = "";
-		if (!progressMap.isEmpty()) {
-			for (int i = 0; i < phrase.length(); i++) {
-				if (phrase.charAt(i) != ' ') {
-					progress += progressMap.get(phrase.charAt(i));
-				} else {
-					progress += " ";
-				}
-				progress += " ";
-			}
-			return progress;
-		}
-		return "";
-	}
 
 	public void updateProgress(String currentLetter, String currentNumber) {
 		char c = numberMapping.get(Integer.parseInt(currentNumber));
 		progressMap.put(c, currentLetter);
 		oppositeMap.put(String.valueOf(currentLetter), c);
-	}
-
-	public boolean completeCheck() {
-
-		String check = getProgress();
-		check = check.replaceAll("   ", "#");
-		check = check.replaceAll(" ", "");
-		check = check.replaceAll("#", " ");
-
-		if (check.equals(phrase)) {
-			return true;
-		}
-		return false;
-
 	}
 
 	public void undo(char whatToUndo) {
@@ -108,8 +64,6 @@ public class NumberCryptogram extends Cryptogram {
 		updateProgress(String.valueOf(hintedChar), String.valueOf(r));
 	}
 
-	public HashMap<Character, String> getProgressMap() {
-		return progressMap;
-	}
+
 
 }

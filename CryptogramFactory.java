@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
@@ -55,19 +56,30 @@ public class CryptogramFactory {
                //cryptogram.resetProgress();
                return cryptogram;
            }
-           else if( type.equals("letter")) {
-                for(int i = 0; i < sentence.length(); i++) {
-                	if(sentence.charAt(i) != ' ')
-             	    {
-                		char randomLetter = alphabet.charAt(rand.nextInt(30));
-                		letterMappings.put(randomLetter,sentence.charAt(i));
-                		letterKeys.put(sentence.charAt(i), randomLetter);
-             	    }
-                   
+           else if (type.equals("letter")) {
+               ArrayList<Character> alphabetMap = new ArrayList<>();
+               for (int i = 0; i < 26; i++) {
+                   alphabetMap.add(alphabet.charAt(i));
                }
-               return new LetterCryptogram(sentence, letterMappings, letterKeys);
-           }
-           else {
+               for (int i = 0; i < sentence.length(); i++) {
+                   if (!letterMappings.containsValue(sentence.charAt(i))) {
+                       if (sentence.charAt(i) != ' ') {
+                           m = rand.nextInt(25);
+                           while (letterMappings.containsKey(alphabetMap.get(m))) {
+                               m = rand.nextInt(25);
+                           }
+                       } else {
+                           m = letterKeys.get(sentence.charAt(i));
+                       }
+                       letterMappings.put(alphabetMap.get(m), sentence.charAt(i));
+                       letterKeys.put(sentence.charAt(i), alphabetMap.get(m));
+                       progressMapping.put(sentence.charAt(i), String.valueOf(alphabetMap.get(m)));
+                       opMapping.put(String.valueOf(alphabetMap.get(m)), sentence.charAt(i));
+                   }
+               }
+
+               LetterCryptogram cryptogram = new LetterCryptogram(sentence, letterMappings, letterKeys, progressMapping, opMapping);
+           }else {
                System.out.println("Currently supporting only two types of cryptograms");
            }
         return null;
